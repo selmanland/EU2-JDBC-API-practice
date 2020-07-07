@@ -50,6 +50,7 @@ public class HamcrestMatchersApiTest {
                 "teachers.lastName[0]",equalTo("Kim"),
                 "teachers.gender[0]",equalTo("Male"));
 
+
     }
 
 }
