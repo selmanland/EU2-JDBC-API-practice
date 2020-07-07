@@ -1,0 +1,4 @@
+# Project exclude paths
+/target/
+.idea/
+EU2-JDBC-API-practice.iml
