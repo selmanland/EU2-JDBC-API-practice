@@ -3,8 +3,8 @@ package apitests;
 import io.restassured.http.ContentType;
 import org.testng.annotations.Test;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class HamcrestMatchersApiTest {
@@ -49,6 +49,18 @@ public class HamcrestMatchersApiTest {
                 .and().body("teachers.firstName[0]",equalTo("Harold"),
                 "teachers.lastName[0]",equalTo("Kim"),
                 "teachers.gender[0]",equalTo("Male"));
+
+
+    }
+    @Test
+    public void TeacherWithdepartments(){
+
+        given().accept(ContentType.JSON).and()
+                .pathParam("name","Computer")
+                .when().get("http://api.cybertektraining.com/teacher/department/{name}")
+                .then().statusCode(200).and().contentType("application/json;charset=UTF-8")
+                .and().assertThat().body("teachers.firstName", hasItems("Alexander","tvrec","Marteen"));
+
 
 
     }
