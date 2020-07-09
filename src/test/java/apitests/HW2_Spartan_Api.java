@@ -31,14 +31,14 @@ public class HW2_Spartan_Api {
         given().accept(ContentType.JSON)
                 .pathParam("id",20)
                 .auth().basic("admin","admin")
-                .when().get("http://54.210.58.84:8000/spartans/{id}")
+                .when().get("http://54.210.58.84:8000/api/spartans/{id}")
                 .then().statusCode(200)
                 .header("Content-Type","application/json;charset=UTF-8")
                 .header("Date",notNullValue())
                 .header("Transfer-Encoding","chunked")
-                .body("id",is(20),
-                        "name",is("Lothario"),
-                "gender",is("Male"),
+                .body("id",equalTo(20),
+                        "name",equalTo("Lothario"),
+                "gender",equalTo("Male"),
                         "phone",is(7551551687L));
 
     }
@@ -57,4 +57,7 @@ public class HW2_Spartan_Api {
      * And totalPages is 1
      * And sorted is false
      */
+
+
+
 }
