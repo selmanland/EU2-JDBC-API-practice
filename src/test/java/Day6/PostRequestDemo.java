@@ -4,13 +4,13 @@ import org.testng.annotations.Test;
 import io.restassured.RestAssured;
 import org.testng.annotations.BeforeClass;
 
+
 import static io.restassured.RestAssured.*;
 import static org.testng.Assert.*;
-
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import utilities.ConfigurationReader;
 
+import utilities.ConfigurationReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,9 +148,9 @@ public class PostRequestDemo {
         long phone =response.path("data.phone");
 
         //assertion
-        assertEquals(name,"MikeEU");
-        assertEquals(gender,"Male");
-        assertEquals(phone,8877445596l);
+        assertEquals(name,spartanEU.getName());
+        assertEquals(gender,spartanEU.getGender());
+        assertEquals(phone,spartanEU.getPhone());
 
         int idFromPOST = response.path("data.id");
         //===========END OF POST REQUEST
