@@ -4,7 +4,6 @@ import org.testng.annotations.Test;
 import io.restassured.RestAssured;
 import org.testng.annotations.BeforeClass;
 
-
 import static io.restassured.RestAssured.*;
 import static org.testng.Assert.*;
 import io.restassured.http.ContentType;
