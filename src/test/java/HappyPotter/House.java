@@ -61,7 +61,9 @@ public class House {
      * @param id
      * @param colors
      */
-    public House(String id, String name, String mascot, String headOfHouse, String houseGhost, String founder, Integer v, String school, List<Member> members, List<String> values, List<String> colors) {
+    public House(String id, String name, String mascot, String headOfHouse, String houseGhost,
+                 String founder, Integer v, String school,
+                 List<Member> members, List<String> values, List<String> colors) {
         super();
         this.id = id;
         this.name = name;

@@ -1,13 +1,18 @@
 package HappyPotter;
 
 import io.restassured.RestAssured;
+import io.restassured.response.ValidatableResponse;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static io.restassured.RestAssured.*;
 import static org.testng.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+
+import java.util.List;
+import java.util.Map;
 
 public class POJO_Tests {
 
@@ -63,6 +68,12 @@ public class POJO_Tests {
      */
     @Test
     public void noKeyTest(){
+        given().accept(ContentType.JSON).auth().basic("h_iltas@yahoo.com","2KAVR.AVHRu5E@3")
+                .when().get("/characters")
+                .then().assertThat().statusCode(409)
+                .contentType("application/json; charset=utf-8")
+                .statusLine("HTTP/1.1 409 Conflict")
+                .assertThat().body("error",equalTo("Must pass API key for request"));
 
     }
 
@@ -72,10 +83,20 @@ public class POJO_Tests {
      * • Header Accept with value application/json
      * • Query param key with value {{apiKey}}
      * 2. Verify status code 200, content type application/json; charset=utf-8
-     * 3. Verify response contains 194 characters
+     * 3. Verify response contains 194 characters (actual=195)
      */
     @Test
     public void noOfCharactersTest(){
+        Response response = given().accept(ContentType.JSON).auth().basic("h_iltas@yahoo.com", "2KAVR.AVHRu5E@3")
+                .queryParam("key",
+                        "$2a$10$srnIOtEWxZBxZ7ZoQj97X.ZzxfNPthaVJcOtvagzzLN25iSwuHeEa")
+                .when().get("/characters");
+
+        assertEquals(response.statusCode(),200);
+        assertEquals(response.contentType(),"application/json; charset=utf-8");
+
+        List <Map<String,Object>> list = response.body().as(List.class);
+        assertEquals(list.size(),195);
 
 
     }
