@@ -1,6 +1,10 @@
 package HappyPotter;
 
+import Day6.Spartan;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import io.restassured.RestAssured;
+import io.restassured.response.ResponseBody;
 import io.restassured.response.ValidatableResponse;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -67,6 +71,8 @@ public class POJO_Tests {
                 .queryParam("key","invalid")
                 .when().get("/characters");
 
+        response.prettyPrint();
+
         assertEquals(response.statusCode(),401);
         assertEquals(response.contentType(),"application/json; charset=utf-8");
         assertTrue(response.statusLine().contains("Unauthorized"));
@@ -102,16 +108,18 @@ public class POJO_Tests {
      */
     @Test
     public void noOfCharactersTest(){
+
         Response response = given().accept(ContentType.JSON)
                 .queryParam("key",
                         apiKey)
                 .when().get("/characters");
-
         assertEquals(response.statusCode(),200);
         assertEquals(response.contentType(),"application/json; charset=utf-8");
 
         List <Map<String,Object>> list = response.body().as(List.class);
         assertEquals(list.size(),195);
+
+        System.out.println("list.size() = " + list.size());
 
 
     }
@@ -127,8 +135,9 @@ public class POJO_Tests {
      * 5. Verify value of the house in all characters in the response is one of the following:
      * "Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"
      */
-    @Test
+    @Test (description = "5")
     public void noOfCharIdAndHouseTest(){
+
         given().accept(ContentType.JSON)
                 .queryParam("key"
                         , apiKey)
@@ -153,8 +162,9 @@ public class POJO_Tests {
      * • Query param name with value from step 3
      * 5. Verify that response contains the same character information from step 3. Compare all fields.
      */
-    @Test
+    @Test(description = "6")
     public void characterInfoTest(){
+
 
     }
 
@@ -173,8 +183,10 @@ public class POJO_Tests {
      * 5. Verify status code 200, content type application/json; charset=utf-8
      * 6. Verify response body is empty
      */
-    @Test
+    @Test(description = "7")
     public void nameSearchTest(){
+
+
 
     }
 
