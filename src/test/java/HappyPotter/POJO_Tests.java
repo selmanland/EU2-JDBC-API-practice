@@ -11,8 +11,7 @@ import static org.hamcrest.Matchers.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class POJO_Tests {
 
@@ -20,6 +19,8 @@ public class POJO_Tests {
     public void beforeClass(){
         RestAssured.baseURI = "https://www.potterapi.com/v1";
     }
+
+    String apiKey = "$2a$10$srnIOtEWxZBxZ7ZoQj97X.ZzxfNPthaVJcOtvagzzLN25iSwuHeEa";
 
     /***
      * Verify sorting hat
@@ -30,11 +31,26 @@ public class POJO_Tests {
      */
     @Test
     public void sortHatTest(){
-        Response response = given().auth().basic("h_iltas@yahoo.com", "2KAVR.AVHRu5E@3")
-                .when().get("/sortingHat");
-
+        Response response = when().get("/sortingHat");
+        //Verify status code 200, content type application/json; charset=utf-8
         assertEquals(response.statusCode(),200);
         assertEquals(response.contentType(),"application/json; charset=utf-8");
+        System.out.println("response = " + response.body().asString());
+
+        //Verify that response body contains one of the following houses:
+        //     * "Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"
+        List<String> myList = Arrays.asList("Gryffindor","Ravenclaw","Slytherin","Hufflepuff");
+
+        /*for (String item : myList) {
+            if (item.equals(response.body().asString())) {
+                System.out.println("item = " + item);
+                assertTrue(item.contains(response.body().asString()));
+                break;
+            }
+        }*/
+        String string = response.body().asString().replace("\"", "");
+        response.prettyPrint();
+
     }
     /***
      * Verify bad key
@@ -47,8 +63,7 @@ public class POJO_Tests {
      */
     @Test
     public void badKeyTest(){
-        Response response = given().auth().basic("h_iltas@yahoo.com", "2KAVR.AVHRu5E@3")
-                .accept(ContentType.JSON)
+        Response response = given().accept(ContentType.JSON)
                 .queryParam("key","invalid")
                 .when().get("/characters");
 
@@ -68,7 +83,7 @@ public class POJO_Tests {
      */
     @Test
     public void noKeyTest(){
-        given().accept(ContentType.JSON).auth().basic("h_iltas@yahoo.com","2KAVR.AVHRu5E@3")
+        given().accept(ContentType.JSON)
                 .when().get("/characters")
                 .then().assertThat().statusCode(409)
                 .contentType("application/json; charset=utf-8")
@@ -87,9 +102,9 @@ public class POJO_Tests {
      */
     @Test
     public void noOfCharactersTest(){
-        Response response = given().accept(ContentType.JSON).auth().basic("h_iltas@yahoo.com", "2KAVR.AVHRu5E@3")
+        Response response = given().accept(ContentType.JSON)
                 .queryParam("key",
-                        "$2a$10$srnIOtEWxZBxZ7ZoQj97X.ZzxfNPthaVJcOtvagzzLN25iSwuHeEa")
+                        apiKey)
                 .when().get("/characters");
 
         assertEquals(response.statusCode(),200);
@@ -114,6 +129,14 @@ public class POJO_Tests {
      */
     @Test
     public void noOfCharIdAndHouseTest(){
+        given().accept(ContentType.JSON)
+                .queryParam("key"
+                        , apiKey)
+                .when().get("/characters")
+                .then().assertThat().statusCode(200).contentType("application/json; charset=utf-8")
+                .and().body("_id",hasItem(notNullValue()))
+                .body("dumbledoresArmy",hasItems(true,false))
+                .body("house",hasItems("Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"));
 
     }
 
