@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import io.restassured.RestAssured;
 import io.restassured.response.ResponseBody;
 import io.restassured.response.ValidatableResponse;
+import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static io.restassured.RestAssured.*;
@@ -33,7 +34,7 @@ public class POJO_Tests {
      * 3. Verify that response body contains one of the following houses:
      * "Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"
      */
-    @Test
+    @Test(description = "Test 1")
     public void sortHatTest(){
         Response response = when().get("/sortingHat");
         //Verify status code 200, content type application/json; charset=utf-8
@@ -65,7 +66,7 @@ public class POJO_Tests {
      * 3. Verify response status line include message Unauthorized
      * 4. Verify that response body says "error": "API Key Not Found"
      */
-    @Test
+    @Test(description = "Test 2")
     public void badKeyTest(){
         Response response = given().accept(ContentType.JSON)
                 .queryParam("key","invalid")
@@ -87,7 +88,7 @@ public class POJO_Tests {
      * 3. Verify response status line include message Conflict
      * 4. Verify that response body says "error": "Must pass API key for request"
      */
-    @Test
+    @Test(description = "Test 3")
     public void noKeyTest(){
         given().accept(ContentType.JSON)
                 .when().get("/characters")
@@ -106,7 +107,7 @@ public class POJO_Tests {
      * 2. Verify status code 200, content type application/json; charset=utf-8
      * 3. Verify response contains 194 characters (actual=195)
      */
-    @Test
+    @Test(description = "Test 4")
     public void noOfCharactersTest(){
 
         Response response = given().accept(ContentType.JSON)
@@ -143,14 +144,25 @@ public class POJO_Tests {
     @Test (description = "Test 5")
     public void noOfCharIdAndHouseTest(){
 
-        given().accept(ContentType.JSON)
-                .queryParam("key"
-                        , apiKey)
+        Response response = given().accept(ContentType.JSON)
+                .queryParam("key", apiKey)
+                .when().get("/characters");
+
+        List<Map<String,Object>> chr = response.body().as(List.class);
+        System.out.println("chr = " + chr.get(0).get("_id"));
+
+        for (Map<String, Object> ch : chr) {
+            assertNotNull(ch.get("_id"));
+        }
+
+        //2nd way:
+        /*given().accept(ContentType.JSON)
+                .queryParam("key", apiKey)
                 .when().get("/characters")
                 .then().assertThat().statusCode(200).contentType("application/json; charset=utf-8")
                 .and().body("_id",hasItem(notNullValue()))
                 .body("dumbledoresArmy",hasItems(true,false))
-                .body("house",hasItems("Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"));
+                .body("house",hasItems("Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"));*/
 
     }
 
@@ -183,7 +195,7 @@ public class POJO_Tests {
 
         //Select name of any random character
         Random rn = new Random();
-        int rnNameNo = rn.nextInt(size)+1;
+        int rnNameNo = rn.nextInt(size);
 
         String rnName = character.get(rnNameNo).get("name").toString();
         System.out.println("rnName = " + rnName);
@@ -199,22 +211,16 @@ public class POJO_Tests {
         //Verify that response contains the same character information from step 3. Compare all fields ???
         assertEquals(response2.statusCode(),200);
         String name2 = response2.body().path("name[0]");
-        System.out.println("name2 = " + name2);
+        //System.out.println("name2 = " + name2);
+
         //compare 2 schools
         assertEquals(response2.body().path("school[0]"),character.get(rnNameNo).get("school"));
-        System.out.println("response2.body().path(\"school[0]\") = " + response2.body().path("school[0]"));
-        System.out.println("character.get(rnNameNo).get(\"school\") = " + character.get(rnNameNo).get("school"));
 
         //compare 2 bloodStatus
         assertEquals(response2.body().path("bloodStatus[0]"),character.get(rnNameNo).get("bloodStatus"));
-        System.out.println("response2.body().path(\"bloodStatus[0]\") = " + response2.body().path("bloodStatus[0]"));
-        System.out.println("character.get(rnNameNo).get(\"bloodStatus\") = " + character.get(rnNameNo).get("bloodStatus"));
 
         //compare 2 species
         assertEquals(response2.body().path("species[0]"),character.get(rnNameNo).get("species"));
-        System.out.println("response2.body().path(\"species[0]\") = " + response2.body().path("species[0]"));
-        System.out.println("character.get(rnNameNo).get(\"species\") = " + character.get(rnNameNo).get("species"));
-
 
 
     }
@@ -237,7 +243,19 @@ public class POJO_Tests {
     @Test(description = "Test 7")
     public void nameSearchTest(){
 
+        given().accept(ContentType.JSON)
+                .queryParam("key", apiKey)
+                .queryParam("name","Harry Potter")
+                .when().get("/characters")
+                .then().assertThat().statusCode(200).contentType("application/json; charset=utf-8")
+                .and().assertThat().body("name[0]", equalTo("Harry Potter"));
 
+        given().accept(ContentType.JSON)
+                .queryParam("key", apiKey)
+                .queryParam("name","Marry Potter")
+                .when().get("/characters")
+                .then().assertThat().statusCode(200).contentType("application/json; charset=utf-8")
+                .and().assertThat().body("", Matchers.hasSize(0));
 
     }
 
@@ -255,8 +273,35 @@ public class POJO_Tests {
      * • Path param id with value from step 3
      * 6. Verify that response contains the same member ids as the step 4
      */
+
     @Test(description = "Test 8")
     public void houseMembersTest(){
+
+        Response response = given().accept(ContentType.JSON)
+                .queryParam("key", apiKey)
+                .when().get("/houses");
+
+        //Verify status code 200, content type application/json; charset=utf-8
+        assertEquals(response.statusCode(),200);
+        assertEquals(response.contentType(),"application/json; charset=utf-8");
+
+        //Capture the id of the Gryffindor house
+        Object idGryffindor = response.path("_id[0]");
+        System.out.println("idGryffindor = " + idGryffindor);
+
+        //Capture the ids of the all members of the Gryffindor house
+        List GryffindorList = response.path("members[0]");
+        System.out.println("GryffindorList = " + GryffindorList);
+
+        //Send a get request to /houses/:id Path param id with value from step 3
+        Response response2 = given().accept(ContentType.JSON)
+                .queryParam("key", apiKey)
+                .queryParam("_id",idGryffindor)
+                .when().get("/houses");
+
+        //Verify that response contains the same member ids as the step 4
+        List GryffindorList2 = response2.path("members[0]");
+        assertEquals(GryffindorList,GryffindorList2);
 
     }
 

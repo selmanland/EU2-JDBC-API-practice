@@ -3,7 +3,7 @@ package HappyPotter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Character {
+public class PotterCharacter {
 
     @SerializedName("_id")
     @Expose
@@ -46,7 +46,7 @@ public class Character {
      * No args constructor for use in serialization
      *
      */
-    public Character() {
+    public PotterCharacter() {
     }
 
     /**
@@ -64,9 +64,9 @@ public class Character {
      * @param orderOfThePhoenix
      * @param house
      */
-    public Character(String id, String name, String role, String house, String school, Integer v,
-                     Boolean ministryOfMagic, Boolean orderOfThePhoenix, Boolean dumbledoresArmy,
-                     Boolean deathEater, String bloodStatus, String species) {
+    public PotterCharacter(String id, String name, String role, String house, String school, Integer v,
+                           Boolean ministryOfMagic, Boolean orderOfThePhoenix, Boolean dumbledoresArmy,
+                           Boolean deathEater, String bloodStatus, String species) {
         super();
         this.id = id;
         this.name = name;
