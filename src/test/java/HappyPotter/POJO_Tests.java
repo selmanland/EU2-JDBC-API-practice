@@ -205,6 +205,16 @@ public class POJO_Tests {
         System.out.println("response2.body().path(\"school[0]\") = " + response2.body().path("school[0]"));
         System.out.println("character.get(rnNameNo).get(\"school\") = " + character.get(rnNameNo).get("school"));
 
+        //compare 2 bloodStatus
+        assertEquals(response2.body().path("bloodStatus[0]"),character.get(rnNameNo).get("bloodStatus"));
+        System.out.println("response2.body().path(\"bloodStatus[0]\") = " + response2.body().path("bloodStatus[0]"));
+        System.out.println("character.get(rnNameNo).get(\"bloodStatus\") = " + character.get(rnNameNo).get("bloodStatus"));
+
+        //compare 2 species
+        assertEquals(response2.body().path("species[0]"),character.get(rnNameNo).get("species"));
+        System.out.println("response2.body().path(\"species[0]\") = " + response2.body().path("species[0]"));
+        System.out.println("character.get(rnNameNo).get(\"species\") = " + character.get(rnNameNo).get("species"));
+
 
 
     }
