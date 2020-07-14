@@ -113,13 +113,18 @@ public class POJO_Tests {
                 .queryParam("key",
                         apiKey)
                 .when().get("/characters");
+
+        //Verify status code 200, content type application/json; charset=utf-8
         assertEquals(response.statusCode(),200);
         assertEquals(response.contentType(),"application/json; charset=utf-8");
 
+        //Verify response contains 195 characters
         List <Map<String,Object>> list = response.body().as(List.class);
         assertEquals(list.size(),195);
 
-        System.out.println("list.size() = " + list.size());
+        System.out.println("list.get(0).get(name) = " + list.get(0).get("name"));
+
+        //response.prettyPrint();
 
 
     }
@@ -135,7 +140,7 @@ public class POJO_Tests {
      * 5. Verify value of the house in all characters in the response is one of the following:
      * "Gryffindor", "Ravenclaw", "Slytherin", "Hufflepuff"
      */
-    @Test (description = "5")
+    @Test (description = "Test 5")
     public void noOfCharIdAndHouseTest(){
 
         given().accept(ContentType.JSON)
@@ -162,8 +167,44 @@ public class POJO_Tests {
      * • Query param name with value from step 3
      * 5. Verify that response contains the same character information from step 3. Compare all fields.
      */
-    @Test(description = "6")
+    @Test(description = "Test 6")
     public void characterInfoTest(){
+        Response response = given().accept(ContentType.JSON)
+                .queryParam("key", apiKey)
+                .when().get("/characters");
+
+        //Verify status code 200, content type application/json; charset=utf-8
+        assertEquals(response.statusCode(),200);
+        assertEquals(response.contentType(),"application/json; charset=utf-8");
+
+        List<Map<String,Object>> character = response.body().as(List.class);
+        int size = character.size();
+        System.out.println("size = " + size);
+
+        //Select name of any random character
+        Random rn = new Random();
+        int rnNameNo = rn.nextInt(size)+1;
+
+        String rnName = character.get(rnNameNo).get("name").toString();
+        System.out.println("rnName = " + rnName);
+
+        //Send a get request to /characters
+        Response response2 = given().accept(ContentType.JSON)
+                .queryParam("key", apiKey)
+                .queryParam("name",rnName)
+                .when().get("/characters");
+
+        response2.prettyPrint();
+
+        //Verify that response contains the same character information from step 3. Compare all fields ???
+        assertEquals(response2.statusCode(),200);
+        String name2 = response2.body().path("name[0]");
+        System.out.println("name2 = " + name2);
+        //compare 2 schools
+        assertEquals(response2.body().path("school[0]"),character.get(rnNameNo).get("school"));
+        System.out.println("response2.body().path(\"school[0]\") = " + response2.body().path("school[0]"));
+        System.out.println("character.get(rnNameNo).get(\"school\") = " + character.get(rnNameNo).get("school"));
+
 
 
     }
@@ -183,7 +224,7 @@ public class POJO_Tests {
      * 5. Verify status code 200, content type application/json; charset=utf-8
      * 6. Verify response body is empty
      */
-    @Test(description = "7")
+    @Test(description = "Test 7")
     public void nameSearchTest(){
 
 
@@ -204,7 +245,7 @@ public class POJO_Tests {
      * • Path param id with value from step 3
      * 6. Verify that response contains the same member ids as the step 4
      */
-    @Test
+    @Test(description = "Test 8")
     public void houseMembersTest(){
 
     }
@@ -222,7 +263,7 @@ public class POJO_Tests {
      * • Query param house with value Gryffindor
      * 4. Verify that response contains the same member ids from step 2
      */
-    @Test
+    @Test(description = "Test 9")
     public void houseMembers2(){
 
     }
@@ -235,7 +276,7 @@ public class POJO_Tests {
      * 2. Verify status code 200, content type application/json; charset=utf-8
      * 3. Verify that Gryffindor house has the most members
      */
-    @Test
+    @Test(description = "Test 10")
     public void houseMostTest(){
 
     }
