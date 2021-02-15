@@ -111,8 +111,7 @@ public class POJO_Tests {
     public void noOfCharactersTest(){
 
         Response response = given().accept(ContentType.JSON)
-                .queryParam("key",
-                        apiKey)
+                .queryParam("key", apiKey)
                 .when().get("/characters");
 
         //Verify status code 200, content type application/json; charset=utf-8
@@ -320,6 +319,16 @@ public class POJO_Tests {
      */
     @Test(description = "Test 9")
     public void houseMembers2(){
+        Response response = given().accept(ContentType.JSON)
+                .queryParam("key", apiKey)
+                .pathParam("id","5a05e2b252f721a3cf2ea33f")
+                .when().get("/houses/{id}");
+
+        //Verify status code 200, content type application/json; charset=utf-8
+        assertEquals(response.statusCode(),200);
+        assertEquals(response.contentType(),"application/json; charset=utf-8");
+
+
 
     }
 

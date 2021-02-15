@@ -54,6 +54,7 @@ public class HrApiWithJsonPath {
 
         JsonPath json = response.jsonPath();
 
+
         //get me all firstname of employees who is making more than 10000
         List<String> employeesName = json.getList("items.findAll {it.salary>10000}.first_name");
         System.out.println(employeesName);
