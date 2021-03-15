@@ -49,6 +49,7 @@ public class PostRequestDemo {
                 .and().body(jsonBody)
                 .when().post("/api/spartans");
 
+        //validations...
         //verify status code
         assertEquals(response.statusCode(),201);
         //verify content type

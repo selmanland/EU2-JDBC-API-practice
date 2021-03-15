@@ -17,7 +17,7 @@ public class SpartanTestWithParameters {
 
     @BeforeClass
     public void beforeClass(){
-        RestAssured.baseURI = "http://54.210.58.84:8000";
+        RestAssured.baseURI = "http://3.84.148.128:8000";
     }
 
     /*
@@ -37,7 +37,7 @@ public class SpartanTestWithParameters {
                 .when().get("/api/spartans/{id}");
 
         assertEquals(response.statusCode(),200);
-        assertEquals(response.contentType(),"application/json;charset=UTF-8");
+        assertEquals(response.contentType(),"application/json");
         assertTrue(response.body().asString().contains("Blythe"));
 
     }
@@ -60,10 +60,11 @@ public class SpartanTestWithParameters {
                 .when().get("/api/spartans/{id}");
 
         assertEquals(response.statusCode(),404);
-        assertEquals(response.contentType(),"application/json;charset=UTF-8");
-        assertTrue(response.body().asString().contains("Spartan Not Found"));
+        assertEquals(response.contentType(),"application/json");
+        assertTrue(response.body().asString().contains("Not Found"));
 
     }
+
 
     /*
         Given accept type is Json

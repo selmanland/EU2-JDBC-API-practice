@@ -11,7 +11,7 @@ import static io.restassured.RestAssured.given;
 public class simpleGetRequest {
 
 
-    String hrurl ="http://54.210.58.84:1000/ords/hr/regions";
+    String hrurl ="http://3.84.148.128:1000/ords/hr/regions";
 
     @Test
     public void test1(){
