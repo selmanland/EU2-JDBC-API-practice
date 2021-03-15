@@ -71,7 +71,7 @@ public class PostRequestDemo {
     }
 
     @Test
-    public void PostNewSpartan2(){
+    public void PostMethodWithMap(){
         //create map to keep request json body info
         Map<String,Object> requestMap = new HashMap<>();
         //adding values that we want to post
