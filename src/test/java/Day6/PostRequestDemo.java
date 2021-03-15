@@ -114,7 +114,7 @@ public class PostRequestDemo {
     }
 
     @Test
-    public void PostNewSpartan3(){
+    public void PostWithPojo(){
         //get spartan info from mackaroo and send post requests(optional homework)
         //-Create one mackaroo api for name,gender,phone
         //send get request to retrieve random info from api
@@ -123,7 +123,7 @@ public class PostRequestDemo {
 
         //create spartan object to send information
         Spartan spartanEU = new Spartan();
-        spartanEU.setName("MikeEU");
+        spartanEU.setName("MikeEUPojo");
         spartanEU.setGender("Male");
         spartanEU.setPhone(8877445596l);
 
