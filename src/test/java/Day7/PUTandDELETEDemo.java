@@ -1,5 +1,7 @@
 package Day7;
 
+import io.restassured.response.Response;
+import io.restassured.response.Response.*;
 import io.restassured.response.ValidatableResponse;
 import org.testng.annotations.Test;
 import io.restassured.RestAssured;
@@ -39,6 +41,7 @@ public class PUTandDELETEDemo {
                 .assertThat().statusCode(204);
 
 
+
     }
 
     @Test
@@ -70,6 +73,7 @@ public class PUTandDELETEDemo {
                 .when().patch("/api/spartans/{id}").then()
                 .assertThat().statusCode(204);
 
+        //System.out.println("response = " + response.header("Connection","keep-alive"));
 
     }
 
