@@ -33,13 +33,13 @@ public class PUTandDELETEDemo {
         putMap.put("gender","Male");
         putMap.put("phone",12312312312l);
 
-        ValidatableResponse response = given().contentType(ContentType.JSON)
+        given().contentType(ContentType.JSON)
                 .and().auth().basic("admin", "admin")
                 .and().pathParam("id", 340)
                 .and().body(putMap)
-                .when().put("/api/spartans/{id}").then()
+                .when().put("/api/spartans/{id}")
+                .then().log().all()
                 .assertThat().statusCode(204);
-
 
 
     }
@@ -62,23 +62,17 @@ public class PUTandDELETEDemo {
     @Test
     public void PATCHTest(){
         //create one map for the put request json body
-        Map<String,Object> putMap = new HashMap<>();
+        Map<String,Object> patchRequestMap = new HashMap<>();
 
-        putMap.put("phone",12312312312l);
+        patchRequestMap.put("phone",12312312312l);
 
-        ValidatableResponse response = given().contentType(ContentType.JSON)
+        given().contentType(ContentType.JSON)
                 .and().auth().basic("admin", "admin")
                 .and().pathParam("id", 340)
-                .and().body(putMap)
+                .and().body(patchRequestMap)
                 .when().patch("/api/spartans/{id}").then()
                 .assertThat().statusCode(204);
 
-        //System.out.println("response = " + response.header("Connection","keep-alive"));
-
     }
-
-
-
-
 
 }
